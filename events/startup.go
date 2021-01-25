@@ -97,7 +97,7 @@ type LoadoutEvent struct {
 	CargoCapacity int     `json:"CargoCapacity"`
 	MaxJumpRange  float64 `json:"MaxJumpRange"`
 	Rebuy         int     `json:"Rebuy"`
-	Hot           *bool   `json:"Hot,omitempty"`
+	Hot           bool    `json:"Hot,omitempty"`
 	Modules       []*struct {
 		Slot         string   `json:"Slot"`
 		Item         string   `json:"Item"`
@@ -114,8 +114,8 @@ type LoadoutEvent struct {
 			BlueprintID                 int     `json:"BlueprintID"`
 			Level                       int     `json:"Level"`
 			Quality                     float64 `json:"Quality"`
-			ExperimentalEffect          *string `json:"ExperimentalEffect,omitempty"`
-			ExperimentalEffectLocalised *string `json:"ExperimentalEffect_Localised,omitempty"`
+			ExperimentalEffect          string  `json:"ExperimentalEffect,omitempty"`
+			ExperimentalEffectLocalised string  `json:"ExperimentalEffect_Localised,omitempty"`
 			Modifiers                   []*struct {
 				Label         string   `json:"Label"`
 				Value         *float64 `json:"Value,omitempty"`
@@ -145,9 +145,9 @@ type MaterialsEvent struct {
 }
 
 type Material struct {
-	Name          string  `json:"Name"`
-	NameLocalised *string `json:"Name_Localised,omitempty"`
-	Count         int     `json:"Count"`
+	Name          string `json:"Name"`
+	NameLocalised string `json:"Name_Localised,omitempty"`
+	Count         int    `json:"Count"`
 }
 
 func MaterialsEventHandler(b []byte) {
@@ -209,13 +209,13 @@ type LoadGameEvent struct {
 	FID           string   `json:"FID"`
 	Commander     string   `json:"Commander"`
 	Horizons      bool     `json:"Horizons"`
-	Ship          *string  `json:"Ship,omitempty"`
-	ShipLocalised *string  `json:"Ship_Localised,omitempty"`
+	Ship          string   `json:"Ship,omitempty"`
+	ShipLocalised string   `json:"Ship_Localised,omitempty"`
 	ShipID        *int     `json:"ShipID,omitempty"`
-	StartLanded   *bool    `json:"StartLanded,omitempty"`
-	StartDead     *bool    `json:"StartDead,omitempty"`
-	GameMode      *string  `json:"GameMode,omitempty"`
-	Group         *string  `json:"Group,omitempty"`
+	StartLanded   bool     `json:"StartLanded,omitempty"`
+	StartDead     bool     `json:"StartDead,omitempty"`
+	GameMode      string   `json:"GameMode,omitempty"`
+	Group         string   `json:"Group,omitempty"`
 	Credits       int      `json:"Credits"`
 	Loan          int      `json:"Loan"`
 	ShipName      *string  `json:"ShipName,omitempty"`

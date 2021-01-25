@@ -50,8 +50,8 @@ type DockedEvent struct {
 	DistFromStarLS    float64 `json:"DistFromStarLS"`
 	MarketID          int     `json:"MarketID"`
 	StarSystem        string  `json:"StarSystem"`
-	StationAllegiance *string `json:"StationAllegiance,omitempty"`
-	StationEconomies  []struct {
+	StationAllegiance string  `json:"StationAllegiance,omitempty"`
+	StationEconomies  []*struct {
 		Name          string  `json:"Name"`
 		NameLocalised string  `json:"Name_Localised"`
 		Proportion    float64 `json:"Proportion"`
@@ -59,8 +59,8 @@ type DockedEvent struct {
 	StationEconomy          string `json:"StationEconomy"`
 	StationEconomyLocalised string `json:"StationEconomy_Localised"`
 	StationFaction          *struct {
-		FactionState *string `json:"FactionState,omitempty"`
-		Name         string  `json:"Name"`
+		FactionState string `json:"FactionState,omitempty"`
+		Name         string `json:"Name"`
 	} `json:"StationFaction,omitempty"`
 	StationGovernment          string   `json:"StationGovernment"`
 	StationGovernmentLocalised string   `json:"StationGovernment_Localised"`
@@ -170,7 +170,7 @@ type FSDJumpEvent struct {
 	Body     string `json:"Body"`
 	BodyID   int    `json:"BodyID"`
 	BodyType string `json:"BodyType"`
-	Factions *[]struct {
+	Factions []*struct {
 		Allegiance         string  `json:"Allegiance"`
 		FactionState       string  `json:"FactionState"`
 		Government         string  `json:"Government"`
@@ -179,7 +179,7 @@ type FSDJumpEvent struct {
 		Influence          float64 `json:"Influence"`
 		MyReputation       int     `json:"MyReputation"`
 		Name               string  `json:"Name"`
-		ActiveStates       []struct {
+		ActiveStates       []*struct {
 			State string `json:"State"`
 		} `json:"ActiveStates,omitempty"`
 	} `json:"Factions,omitempty"`
@@ -187,8 +187,8 @@ type FSDJumpEvent struct {
 	FuelUsed               float64   `json:"FuelUsed"`
 	JumpDist               float64   `json:"JumpDist"`
 	Population             int       `json:"Population"`
-	PowerplayState         *string   `json:"PowerplayState,omitempty"`
-	Powers                 *[]string `json:"Powers,omitempty"`
+	PowerplayState         string    `json:"PowerplayState,omitempty"`
+	Powers                 []string  `json:"Powers,omitempty"`
 	StarPos                []float64 `json:"StarPos"`
 	StarSystem             string    `json:"StarSystem"`
 	SystemAddress          int       `json:"SystemAddress"`
@@ -256,10 +256,10 @@ func LeaveBodyEventHandler(b []byte) {
 
 type LiftoffEvent struct {
 	event.Event
-	NearestDestination *string  `json:"NearestDestination,omitempty"`
-	Latitude           *float64 `json:"Latitude,omitempty"`
-	Longitude          *float64 `json:"Longitude,omitempty"`
-	PlayerControlled   bool     `json:"PlayerControlled"`
+	NearestDestination string  `json:"NearestDestination,omitempty"`
+	Latitude           float64 `json:"Latitude,omitempty"`
+	Longitude          float64 `json:"Longitude,omitempty"`
+	PlayerControlled   bool    `json:"PlayerControlled"`
 }
 
 func LiftoffEventHandler(b []byte) {
@@ -278,7 +278,7 @@ type LocationEvent struct {
 	BodyID   int    `json:"BodyID"`
 	BodyType string `json:"BodyType"`
 	Docked   bool   `json:"Docked"`
-	Factions *[]*struct {
+	Factions []*struct {
 		Allegiance         string  `json:"Allegiance"`
 		FactionState       string  `json:"FactionState"`
 		Government         string  `json:"Government"`
@@ -287,44 +287,44 @@ type LocationEvent struct {
 		Influence          float64 `json:"Influence"`
 		MyReputation       int     `json:"MyReputation"`
 		Name               string  `json:"Name"`
-		RecoveringStates   []struct {
+		RecoveringStates   []*struct {
 			State string `json:"State"`
 			Trend int    `json:"Trend"`
 		} `json:"RecoveringStates,omitempty"`
-		ActiveStates []struct {
+		ActiveStates []*struct {
 			State string `json:"State"`
 		} `json:"ActiveStates,omitempty"`
 	} `json:"Factions,omitempty"`
-	MarketID          *int      `json:"MarketID,omitempty"`
+	MarketID          int       `json:"MarketID,omitempty"`
 	Population        int       `json:"Population"`
-	PowerplayState    *string   `json:"PowerplayState,omitempty"`
-	Powers            *[]string `json:"Powers,omitempty"`
+	PowerplayState    string    `json:"PowerplayState,omitempty"`
+	Powers            []string  `json:"Powers,omitempty"`
 	StarPos           []float64 `json:"StarPos"`
 	StarSystem        string    `json:"StarSystem"`
-	StationAllegiance *string   `json:"StationAllegiance,omitempty"`
-	StationEconomies  *[]*struct {
+	StationAllegiance string    `json:"StationAllegiance,omitempty"`
+	StationEconomies  []*struct {
 		Name          string  `json:"Name"`
 		NameLocalised string  `json:"Name_Localised"`
 		Proportion    float64 `json:"Proportion"`
 	} `json:"StationEconomies,omitempty"`
-	StationEconomy          *string `json:"StationEconomy,omitempty"`
-	StationEconomyLocalised *string `json:"StationEconomy_Localised,omitempty"`
+	StationEconomy          string `json:"StationEconomy,omitempty"`
+	StationEconomyLocalised string `json:"StationEconomy_Localised,omitempty"`
 	StationFaction          *struct {
-		FactionState *string `json:"FactionState,omitempty"`
-		Name         string  `json:"Name"`
+		FactionState string `json:"FactionState,omitempty"`
+		Name         string `json:"Name"`
 	} `json:"StationFaction,omitempty"`
-	StationGovernment          *string   `json:"StationGovernment,omitempty"`
-	StationGovernmentLocalised *string   `json:"StationGovernment_Localised,omitempty"`
-	StationName                *string   `json:"StationName,omitempty"`
-	StationServices            *[]string `json:"StationServices,omitempty"`
-	StationType                *string   `json:"StationType,omitempty"`
-	SystemAddress              int       `json:"SystemAddress"`
-	SystemAllegiance           string    `json:"SystemAllegiance"`
-	SystemEconomy              string    `json:"SystemEconomy"`
-	SystemEconomyLocalised     string    `json:"SystemEconomy_Localised"`
+	StationGovernment          string   `json:"StationGovernment,omitempty"`
+	StationGovernmentLocalised string   `json:"StationGovernment_Localised,omitempty"`
+	StationName                string   `json:"StationName,omitempty"`
+	StationServices            []string `json:"StationServices,omitempty"`
+	StationType                string   `json:"StationType,omitempty"`
+	SystemAddress              int      `json:"SystemAddress"`
+	SystemAllegiance           string   `json:"SystemAllegiance"`
+	SystemEconomy              string   `json:"SystemEconomy"`
+	SystemEconomyLocalised     string   `json:"SystemEconomy_Localised"`
 	SystemFaction              *struct {
-		FactionState *string `json:"FactionState,omitempty"`
-		Name         string  `json:"Name"`
+		FactionState string `json:"FactionState,omitempty"`
+		Name         string `json:"Name"`
 	} `json:"SystemFaction,omitempty"`
 	SystemGovernment             string `json:"SystemGovernment"`
 	SystemGovernmentLocalised    string `json:"SystemGovernment_Localised"`
@@ -346,10 +346,10 @@ func LocationEventHandler(b []byte) {
 
 type StartJumpEvent struct {
 	event.Event
-	JumpType      string  `json:"JumpType"`
-	StarClass     *string `json:"StarClass,omitempty"`
-	StarSystem    *string `json:"StarSystem,omitempty"`
-	SystemAddress *int    `json:"SystemAddress,omitempty"`
+	JumpType      string `json:"JumpType"`
+	StarClass     string `json:"StarClass,omitempty"`
+	StarSystem    string `json:"StarSystem,omitempty"`
+	SystemAddress int    `json:"SystemAddress,omitempty"`
 }
 
 func StartJumpEventHandler(b []byte) {
@@ -399,10 +399,10 @@ func SupercruiseExitEventHandler(b []byte) {
 
 type TouchdownEvent struct {
 	event.Event
-	NearestDestination *string  `json:"NearestDestination,omitempty"`
-	Latitude           *float64 `json:"Latitude,omitempty"`
-	Longitude          *float64 `json:"Longitude,omitempty"`
-	PlayerControlled   bool     `json:"PlayerControlled"`
+	NearestDestination string  `json:"NearestDestination,omitempty"`
+	Latitude           float64 `json:"Latitude,omitempty"`
+	Longitude          float64 `json:"Longitude,omitempty"`
+	PlayerControlled   bool    `json:"PlayerControlled"`
 }
 
 func TouchdownEventHandler(b []byte) {
