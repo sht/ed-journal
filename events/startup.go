@@ -28,7 +28,7 @@ type CargoEvent struct {
 	event.Event
 	Vessel    string `json:"Vessel"`
 	Count     int    `json:"Count"`
-	Inventory []*struct {
+	Inventory *[]struct {
 		Name          string `json:"Name"`
 		Count         int    `json:"Count"`
 		Stolen        int    `json:"Stolen"`
@@ -109,7 +109,7 @@ type LoadoutEvent struct {
 		AmmoInHopper *int     `json:"AmmoInHopper,omitempty"`
 		Engineering  *struct {
 			Engineer                    string  `json:"Engineer"`
-			EngineerID                  int     `json:"EngineerID"`
+			EngineerID                  uint64  `json:"EngineerID"`
 			BlueprintName               string  `json:"BlueprintName"`
 			BlueprintID                 int     `json:"BlueprintID"`
 			Level                       int     `json:"Level"`
@@ -206,22 +206,22 @@ func NewCommanderEventHandler(b []byte) {
 
 type LoadGameEvent struct {
 	event.Event
-	FID           string  `json:"FID"`
-	Commander     string  `json:"Commander"`
-	Horizons      bool    `json:"Horizons"`
-	Ship          string  `json:"Ship"`
-	ShipLocalised *string `json:"Ship_Localised,omitempty"`
-	ShipID        int     `json:"ShipID"`
-	StartLanded   *bool   `json:"StartLanded,omitempty"`
-	StartDead     *bool   `json:"StartDead,omitempty"`
-	GameMode      string  `json:"GameMode"`
-	Group         *string `json:"Group,omitempty"`
-	Credits       int     `json:"Credits"`
-	Loan          int     `json:"Loan"`
-	ShipName      string  `json:"ShipName"`
-	ShipIdent     string  `json:"ShipIdent"`
-	FuelLevel     float64 `json:"FuelLevel"`
-	FuelCapacity  float64 `json:"FuelCapacity"`
+	FID           string   `json:"FID"`
+	Commander     string   `json:"Commander"`
+	Horizons      bool     `json:"Horizons"`
+	Ship          *string  `json:"Ship,omitempty"`
+	ShipLocalised *string  `json:"Ship_Localised,omitempty"`
+	ShipID        *int     `json:"ShipID,omitempty"`
+	StartLanded   *bool    `json:"StartLanded,omitempty"`
+	StartDead     *bool    `json:"StartDead,omitempty"`
+	GameMode      *string  `json:"GameMode,omitempty"`
+	Group         *string  `json:"Group,omitempty"`
+	Credits       int      `json:"Credits"`
+	Loan          int      `json:"Loan"`
+	ShipName      *string  `json:"ShipName,omitempty"`
+	ShipIdent     *string  `json:"ShipIdent,omitempty"`
+	FuelLevel     *float64 `json:"FuelLevel,omitempty"`
+	FuelCapacity  *float64 `json:"FuelCapacity,omitempty"`
 }
 
 func LoadGameEventHandler(b []byte) {
@@ -368,11 +368,11 @@ type StatisticsEvent struct {
 		HighestBounty    int `json:"Highest_Bounty"`
 	} `json:"Crime,omitempty"`
 	Smuggling *struct {
-		BlackMarketsTradedWith   int `json:"Black_Markets_Traded_With"`
-		BlackMarketsProfits      int `json:"Black_Markets_Profits"`
-		ResourcesSmuggled        int `json:"Resources_Smuggled"`
-		AverageProfit            int `json:"Average_Profit"`
-		HighestSingleTransaction int `json:"Highest_Single_Transaction"`
+		BlackMarketsTradedWith   int     `json:"Black_Markets_Traded_With"`
+		BlackMarketsProfits      int     `json:"Black_Markets_Profits"`
+		ResourcesSmuggled        int     `json:"Resources_Smuggled"`
+		AverageProfit            float64 `json:"Average_Profit"`
+		HighestSingleTransaction int     `json:"Highest_Single_Transaction"`
 	} `json:"Smuggling,omitempty"`
 	Trading *struct {
 		MarketsTradedWith        int     `json:"Markets_Traded_With"`

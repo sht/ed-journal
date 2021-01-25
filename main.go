@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/sht/ed-journal/dispatcher"
 	"github.com/sht/ed-journal/event"
 	"github.com/sht/ed-journal/events"
 )
@@ -31,7 +32,7 @@ func main() {
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
 
-	d := event.NewDispatcher()
+	d := dispatcher.NewDispatcher()
 
 	// add event listeners
 	events.AddListeners(d)
@@ -43,20 +44,24 @@ func main() {
 	}
 
 	bs := bytes.Split(b, []byte("\n"))
-	for _, b = range bs {
+	for _, b := range bs {
 		if len(b) > 0 {
-			go parseEvent(d, b)
+			// TODO: use goroutine to handle these
+			parseEvent(d, b)
 		}
 	}
+	fmt.Println("parsed")
 
 	<-quit
 }
 
-func parseEvent(d *event.Dispatcher, b []byte) {
+func parseEvent(d *dispatcher.Dispatcher, b []byte) {
 	var e event.Event
 	err := json.Unmarshal(b, &e)
 	if err != nil {
+		fmt.Println(string(b))
 		fmt.Println(err)
+		panic(err)
 		return
 	}
 

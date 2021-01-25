@@ -4,9 +4,16 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"time"
 
-	"github.com/sht/ed-journal/event"
+	"github.com/sht/ed-journal/dispatcher"
 )
+
+// Event represents an incoming event from the journal
+type Event struct {
+	Event     string    `json:"event"`
+	Timestamp time.Time `json:"timestamp"`
+}
 
 func debug(b1 []byte, e interface{}) {
 	b2, err := json.Marshal(e)
@@ -46,10 +53,10 @@ func debug(b1 []byte, e interface{}) {
 		return
 	}
 
-	fmt.Printf("received %s event\n", b2map["event"])
+	//fmt.Printf("received %s event\n", b2map["event"])
 }
 
-func AddListeners(d *event.Dispatcher) {
+func AddListeners(d *dispatcher.Dispatcher) {
 	// startup
 	{
 		d.On(Cargo, CargoEventHandler)

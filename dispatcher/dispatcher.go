@@ -1,23 +1,25 @@
-package event
+package dispatcher
 
 import (
 	"fmt"
+
+	"github.com/sht/ed-journal/event"
 )
 
 type Dispatcher struct {
-	events map[string][]Handler
+	events map[string][]event.Handler
 }
 
 func NewDispatcher() *Dispatcher {
 	return &Dispatcher{
-		events: make(map[string][]Handler),
+		events: make(map[string][]event.Handler),
 	}
 }
 
-func (d *Dispatcher) On(name string, h Handler) {
+func (d *Dispatcher) On(name string, h event.Handler) {
 	_, ok := d.events[name]
 	if !ok {
-		d.events[name] = make([]Handler, 0, 1)
+		d.events[name] = make([]event.Handler, 0, 1)
 	}
 	d.events[name] = append(d.events[name], h)
 }
