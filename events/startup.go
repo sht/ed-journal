@@ -28,7 +28,7 @@ type CargoEvent struct {
 	event.Event
 	Vessel    string `json:"Vessel"`
 	Count     int    `json:"Count"`
-	Inventory *[]struct {
+	Inventory *[]*struct {
 		Name          string `json:"Name"`
 		Count         int    `json:"Count"`
 		Stolen        int    `json:"Stolen"`
@@ -109,7 +109,7 @@ type LoadoutEvent struct {
 		AmmoInHopper *int     `json:"AmmoInHopper,omitempty"`
 		Engineering  *struct {
 			Engineer                    string  `json:"Engineer"`
-			EngineerID                  uint64  `json:"EngineerID"`
+			EngineerID                  uint    `json:"EngineerID"`
 			BlueprintName               string  `json:"BlueprintName"`
 			BlueprintID                 int     `json:"BlueprintID"`
 			Level                       int     `json:"Level"`
@@ -339,15 +339,15 @@ func ReputationEventHandler(b []byte) {
 type StatisticsEvent struct {
 	event.Event
 	BankAccount *struct {
-		CurrentWealth          int64 `json:"Current_Wealth"`
-		SpentOnShips           int   `json:"Spent_On_Ships"`
-		SpentOnOutfitting      int64 `json:"Spent_On_Outfitting"`
-		SpentOnRepairs         int   `json:"Spent_On_Repairs"`
-		SpentOnFuel            int   `json:"Spent_On_Fuel"`
-		SpentOnAmmoConsumables int   `json:"Spent_On_Ammo_Consumables"`
-		InsuranceClaims        int   `json:"Insurance_Claims"`
-		SpentOnInsurance       int   `json:"Spent_On_Insurance"`
-		OwnedShipCount         int   `json:"Owned_Ship_Count"`
+		CurrentWealth          int `json:"Current_Wealth"`
+		SpentOnShips           int `json:"Spent_On_Ships"`
+		SpentOnOutfitting      int `json:"Spent_On_Outfitting"`
+		SpentOnRepairs         int `json:"Spent_On_Repairs"`
+		SpentOnFuel            int `json:"Spent_On_Fuel"`
+		SpentOnAmmoConsumables int `json:"Spent_On_Ammo_Consumables"`
+		InsuranceClaims        int `json:"Insurance_Claims"`
+		SpentOnInsurance       int `json:"Spent_On_Insurance"`
+		OwnedShipCount         int `json:"Owned_Ship_Count"`
 	} `json:"Bank_Account,omitempty"`
 	Combat *struct {
 		BountiesClaimed      int `json:"Bounties_Claimed"`
@@ -376,15 +376,15 @@ type StatisticsEvent struct {
 	} `json:"Smuggling,omitempty"`
 	Trading *struct {
 		MarketsTradedWith        int     `json:"Markets_Traded_With"`
-		MarketProfits            int64   `json:"Market_Profits"`
+		MarketProfits            int     `json:"Market_Profits"`
 		ResourcesTraded          int     `json:"Resources_Traded"`
 		AverageProfit            float64 `json:"Average_Profit"`
 		HighestSingleTransaction int     `json:"Highest_Single_Transaction"`
 	} `json:"Trading,omitempty"`
 	Mining *struct {
-		MiningProfits      int64 `json:"Mining_Profits"`
-		QuantityMined      int   `json:"Quantity_Mined"`
-		MaterialsCollected int   `json:"Materials_Collected"`
+		MiningProfits      int `json:"Mining_Profits"`
+		QuantityMined      int `json:"Quantity_Mined"`
+		MaterialsCollected int `json:"Materials_Collected"`
 	} `json:"Mining,omitempty"`
 	Exploration *struct {
 		SystemsVisited            int     `json:"Systems_Visited"`

@@ -74,4 +74,26 @@ func AddListeners(d *dispatcher.Dispatcher) {
 		d.On(Reputation, ReputationEventHandler)
 		d.On(Statistics, StatisticsEventHandler)
 	}
+
+	// travel
+	{
+		d.On(ApproachBody, ApproachBodyEventHandler)
+		d.On(Docked, DockedEventHandler)
+		d.On(DockingCancelled, DockingCancelledEventHandler)
+		d.On(DockingDenied, DockingDeniedEventHandler)
+		d.On(DockingGranted, DockingGrantedEventHandler)
+		d.On(DockingRequested, DockingRequestedEventHandler)
+		d.On(DockingTimeout, DockingTimeoutEventHandler)
+		d.On(FSDJump, FSDJumpEventHandler)
+		d.On(FSDTarget, FSDTargetEventHandler)
+		d.On(LeaveBody, LeaveBodyEventHandler)
+		d.On(Liftoff, LiftoffEventHandler)
+		d.On(Location, LocationEventHandler)
+		d.On(StartJump, StartJumpEventHandler)
+		d.On(SupercruiseEntry, SupercruiseEntryEventHandler)
+		d.On(SupercruiseExit, SupercruiseExitEventHandler)
+		d.On(Touchdown, TouchdownEventHandler)
+		d.On(Undocked, UndockedEventHandler)
+		d.On(Route, RouteEventHandler)
+	}
 }
