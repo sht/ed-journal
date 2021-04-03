@@ -7,22 +7,25 @@ import (
 )
 
 var state = new(State)
+var mux sync.RWMutex
 
-// 0   00000111  LLLLLLLL // throttle
-// 1   00000000  RRRRRRLL // throttle
-// 2   00000000  IGFERRRR // throttle, buttons (bool flags)
-// 3   00000000  TGL1UP, SW6, SW5, SW4, SW3, SW2, SW1, H (back)
-// 4   00000000  H3UP, TGL4DOWN, TGL4UP, TGL3DOWN, TGL3UP, TGL2DOWN, TGL2UP, TGL1DOWN
-// 5   00000000  K1UP, H4LEFT, H4DOWN, H4RIGHT, H4UP, H3LEFT, H3DOWN, H3RIGHT
-// 6   00100000  MODE S1, MODE M2, MODE M1, SLD, THUMBCLICK, PINKYSCROLLUP, PINKYSCROLLDOWN, K1DOWN
-// 7   01111011  FFFFFFFF axis
-// 8   10000000  THUMBHORIZONTAL axis
-// 9   01111111  GGGGGGGG axis
-// 10  10000000  THUMBVERTICAL axis
-// 11  00000000  RTY4 axis
-// 12  00000000  RTY3 axis
+// State represents the state of the throttle device
+//
+// Bit map:
+//  0  00000111  LLLLLLLL  ThrottleL
+//  1  00000000  RRRRRRLL  ThrottleR, ThrottleL
+//  2  00000000  IGFERRRR  I, G, F, E, ThrottleR
+//  3  00000000  TSSSSSSH  TGL1Up, SW6, SW5, SW4, SW3, SW2, SW1, H
+//  4  00000000  HTTTTTTT  H3(up), TGL4Down, TGL4Up, TGL3Down, TGL3Up, TGL2Down, TGL2Up, TGL1Down
+//  5  00000000  KHHHHHHH  K1Up, H4(left), H4(down), H4(right), H4(up), H3(left), H3(down), H3(right)
+//  6  00100000  MMMSTSSK  Mode(s1), Mode(m2), Mode(m1), SLD, Thumb(button), ScrollUp, ScrollDown, K1Down
+//  7  01111011  FFFFFFFF  F
+//  8  10000000  XXXXXXXX  Thumb(x)
+//  9  01111111  GGGGGGGG  G
+// 10  10000000  YYYYYYYY  Thumb(y)
+// 11  00000000  RRRRRRRR  RTY4
+// 12  00000000  RRRRRRRR  RTY3
 type State struct {
-	sync.Mutex
 	ThrottleL types.Axis // 0-1023, deadzone at 511, if connected with ThrottleR then ThrottleR is synced with ThrottleL
 	ThrottleR types.Axis // 0-1023
 	Thumb     struct {
@@ -67,9 +70,15 @@ type State struct {
 	ScrollDown types.Button
 }
 
-func (state *State) Update(b []byte) {
-	state.Lock()
-	defer state.Unlock()
+func GetState() State {
+	mux.RLock()
+	defer mux.RUnlock()
+	return *state
+}
+
+func UpdateState(b []byte) {
+	mux.Lock()
+	defer mux.Unlock()
 
 	b1 := b[1]
 	b[1] = b[1] & 0b00000011
