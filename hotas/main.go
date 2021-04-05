@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/google/gousb"
+	"github.com/rdnt/uinput"
 	"github.com/sht/ed-journal/dispatcher"
 	"github.com/sht/ed-journal/event"
 	"github.com/sht/ed-journal/hotas/stick"
@@ -18,12 +20,12 @@ import (
 )
 
 const (
-	ThrottleEvent             = "ThrottleEvent"
-	StickEvent                = "StickEvent"
-	ThrottleStateUpdatedEvent = "ThrottleStateUpdatedEvent"
-	StickStateUpdatedEvent    = "StickStateUpdatedEvent"
-	ThrottleConnectedEvent    = "ThrottleConnectedEvent"
-	StickConnectedEvent       = "StickConnectedEvent"
+	ThrottleEvent             = "Throttle"
+	StickEvent                = "Stick"
+	ThrottleStateUpdatedEvent = "ThrottleStateUpdated"
+	StickStateUpdatedEvent    = "StickStateUpdated"
+	ThrottleConnectedEvent    = "ThrottleConnected"
+	StickConnectedEvent       = "StickConnected"
 )
 
 var debug = true
@@ -37,15 +39,96 @@ func main() {
 	dispatcher.On(ThrottleEvent, ThrottleEventHandler)
 	dispatcher.On(StickEvent, StickEventHandler)
 
+	throttleDev, err := uinput.CreateJoystick(
+		"/dev/uinput",
+		[]byte("Mad Catz Saitek Pro Flight X-56 Rhino Throttle (emulated)"),
+		throttle.AxesConfig,
+		throttle.ButtonsConfig,
+	)
+	defer func() {
+		err = throttleDev.Close()
+		if err != nil {
+			fmt.Printf("Failed to create the virtual mouse. Last error was: %s\n", err)
+			os.Exit(1)
+		}
+	}()
+	if err != nil {
+		fmt.Printf("Failed to create the virtual mouse. Last error was: %s\n", err)
+		os.Exit(1)
+	}
+
+	stickDev, err := uinput.CreateJoystick(
+		"/dev/uinput",
+		[]byte("Mad Catz Saitek Pro Flight X-56 Rhino Stick (emulated)"),
+		stick.AxesConfig,
+		stick.ButtonsConfig,
+	)
+	defer func() {
+		err = stickDev.Close()
+		if err != nil {
+			fmt.Printf("Failed to create the virtual mouse. Last error was: %s\n", err)
+			os.Exit(1)
+		}
+	}()
+	if err != nil {
+		fmt.Printf("Failed to create the virtual mouse. Last error was: %s\n", err)
+		os.Exit(1)
+	}
+
+	dispatcher.On(ThrottleStateUpdatedEvent, func(_ []byte) {
+		axes, buttons := throttle.GetState().Map()
+
+		for id, axis := range axes {
+			err = throttleDev.SetAxis(id, int32(axis))
+			if err != nil {
+				fmt.Printf("Failed to move mouse left. Last error was: %s\n", err)
+				os.Exit(1)
+			}
+		}
+
+		for id, on := range buttons {
+			err = throttleDev.SetButton(id, bool(on))
+			if err != nil {
+				fmt.Printf("Failed to move mouse left. Last error was: %s\n", err)
+				os.Exit(1)
+			}
+		}
+	})
+
+	dispatcher.On(StickStateUpdatedEvent, func(_ []byte) {
+		axes, buttons := stick.GetState().Map()
+
+		for id, axis := range axes {
+			err = stickDev.SetAxis(id, int32(axis))
+			if err != nil {
+				fmt.Printf("Failed to move mouse left. Last error was: %s\n", err)
+				os.Exit(1)
+			}
+		}
+
+		for id, on := range buttons {
+			err = stickDev.SetButton(id, bool(on))
+			if err != nil {
+				fmt.Printf("Failed to move mouse left. Last error was: %s\n", err)
+				os.Exit(1)
+			}
+		}
+	})
+
 	if debug {
 		dispatcher.On(ThrottleStateUpdatedEvent, func(b []byte) {
-			//state := throttle.GetState()
-			fmt.Println(ThrottleStateUpdatedEvent)
+			//state := stick.GetState()
+			//fmt.Println(ThrottleStateUpdatedEvent, state)
 		})
 
-		dispatcher.On(StickStateUpdatedEvent, func([]byte) {
-			//state := stick.GetState()
-			fmt.Println(StickStateUpdatedEvent)
+		dispatcher.On(StickStateUpdatedEvent, func(b []byte) {
+			for _, b := range b {
+				fmt.Printf("%08b\n", b)
+			}
+			state := stick.GetState()
+			b, _ = json.MarshalIndent(state, "", "  ")
+			fmt.Println(string(b))
+			//fmt.Println(StickStateUpdatedEvent, state)
 		})
 	}
 
@@ -58,6 +141,7 @@ func main() {
 		VendorID:  0x0738,
 		ProductID: 0xa221,
 		OnUpdate: func(b []byte) {
+			throttle.UpdateState(b)
 			dispatcher.Trigger(ThrottleStateUpdatedEvent, b)
 		},
 		OnConnect: func(b []byte) {
@@ -70,6 +154,7 @@ func main() {
 		VendorID:  0x0738,
 		ProductID: 0x2221,
 		OnUpdate: func(b []byte) {
+			stick.UpdateState(b)
 			dispatcher.Trigger(StickStateUpdatedEvent, b)
 		},
 		OnConnect: func(b []byte) {

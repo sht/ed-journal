@@ -4,8 +4,8 @@ import (
 	"encoding/binary"
 )
 
-func GetAxis(b []byte) int {
-	return int(binary.LittleEndian.Uint16(b))
+func GetAxis(b []byte) int32 {
+	return int32(binary.LittleEndian.Uint16(b))
 }
 
 func GetBool(b byte, i int) bool {
